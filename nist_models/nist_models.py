@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from typing import List, Callable
 import pandas as pd
+import numpy as np
 
 class NISTModel:
   _models_data = None
