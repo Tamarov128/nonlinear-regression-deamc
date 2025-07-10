@@ -48,11 +48,10 @@ def parse_nist_dat_file(file_path):
     if param_match:
         metadata['parameters_no'] = int(param_match.group(1))
     
-    # Extract model equation
-    model_match = re.search(r'y\s*=\s*(.+?)(?:\+\s*e\s*$|\s*$)', content, re.MULTILINE)
-    if model_match:
-        model_eq = model_match.group(1).strip()
-        metadata['model_function'] = convert_equation_to_lambda(model_eq)
+    # Extract model equation - improved version
+    model_equation = extract_model_equation(content)
+    if model_equation:
+        metadata['model_function'] = convert_equation_to_lambda(model_equation)
     
     # Parse starting values and certified values using a more robust approach
     # Find the section between "Starting values" and "Residual Sum of Squares"
@@ -138,6 +137,64 @@ def parse_nist_dat_file(file_path):
     return metadata, data_points
 
 
+def extract_model_equation(content):
+    """
+    Extract the model equation from the NIST file content.
+    Looks specifically in the Model section for the equation.
+    
+    Args:
+        content (str): File content
+    
+    Returns:
+        str: Model equation or None if not found
+    """
+    # Strategy 1: Look for equation in the Model section
+    # Find the model section first
+    model_section_match = re.search(
+        r'Model:\s*.*?\n(.*?)(?=\n\s*Starting values|\n\s*Data:|\Z)',
+        content, re.DOTALL | re.IGNORECASE
+    )
+    
+    if model_section_match:
+        model_section = model_section_match.group(1)
+        
+        # Look for equation patterns in the model section
+        # Pattern 1: y = ... + e (multiline)
+        eq_match = re.search(r'y\s*=\s*(.+?)(?:\s*\+\s*e\s*$|\s*$)', model_section, re.DOTALL | re.MULTILINE)
+        if eq_match:
+            equation = eq_match.group(1).strip()
+            # Clean up the equation - remove extra whitespace and newlines
+            equation = re.sub(r'\s+', ' ', equation)
+            equation = re.sub(r'\n+', ' ', equation)
+            return equation.strip()
+    
+    # Strategy 2: Look for standalone equation lines that contain mathematical expressions
+    lines = content.split('\n')
+    for i, line in enumerate(lines):
+        line = line.strip()
+        # Look for lines that start with y = and contain mathematical operators
+        if (line.startswith('y =') or line.startswith('y=')) and any(op in line for op in ['*', '+', '-', '/', '(', ')']):
+            # Check if this is a simple variable assignment like "y = magnetism"
+            if not re.search(r'y\s*=\s*\w+\s*\)', line):  # Skip "y = magnetism)" type lines
+                equation = line
+                # If the equation continues on the next lines, collect them
+                j = i + 1
+                while j < len(lines) and (lines[j].strip().startswith('+') or 
+                                         lines[j].strip().startswith('-') or
+                                         'exp(' in lines[j] or
+                                         lines[j].strip().endswith('+ e')):
+                    equation += ' ' + lines[j].strip()
+                    j += 1
+                
+                # Remove the "y =" part
+                equation = re.sub(r'^\s*y\s*=\s*', '', equation)
+                # Remove trailing "+ e"
+                equation = re.sub(r'\s*\+\s*e\s*$', '', equation)
+                return equation.strip()
+    
+    return None
+
+
 def convert_equation_to_lambda(equation):
     """
     Convert a mathematical equation to a lambda function string.
@@ -148,23 +205,37 @@ def convert_equation_to_lambda(equation):
     Returns:
         str: Lambda function string
     """
+    if not equation:
+        return ""
+    
     # Remove common prefixes and suffixes
     eq = equation.strip()
     eq = re.sub(r'^\s*y\s*=\s*', '', eq)  # Remove y =
     eq = re.sub(r'\s*\+\s*e\s*$', '', eq)  # Remove + e at end
     eq = re.sub(r'\s*\+\s*$', '', eq)     # Remove trailing +
     
+    # Clean up whitespace
+    eq = re.sub(r'\s+', ' ', eq)
+    
     # Fix common mathematical notations
     eq = eq.replace('exp(', 'np.exp(')
     eq = eq.replace('exp[', 'np.exp(')
     eq = eq.replace(']', ')')
     eq = eq.replace('arctan[', 'np.arctan(')
+    eq = eq.replace('arctan(', 'np.arctan(')
     eq = eq.replace('cos(', 'np.cos(')
     eq = eq.replace('sin(', 'np.sin(')
+    eq = eq.replace('log(', 'np.log(')
+    eq = eq.replace('log[', 'np.log(')
     eq = eq.replace('pi', 'np.pi')
     
-    # Fix exponentiation
+    # Handle power operations
+    # Convert **(-1/b3) to **(-1/b3) - already correct
+    # Convert (expression)**(-1/b3) to (expression)**(-1/b3) - already correct
     eq = re.sub(r'\*\*\s*\(-1/(\w+)\)', r'**(-1/\1)', eq)
+    
+    # Handle fractions in exponents like (-1/b3)
+    # No change needed - already handled correctly
     
     # Determine parameters based on content
     param_nums = re.findall(r'b(\d+)', eq)
@@ -203,6 +274,39 @@ def debug_parse_starting_values(file_path):
                 print(f"Line {i}: '{line}'")
 
 
+def debug_model_equation(file_path):
+    """
+    Debug function to help understand the model equation extraction.
+    """
+    with open(file_path, 'r') as file:
+        content = file.read()
+    
+    print(f"Debugging model equation for: {file_path}")
+    print("=" * 50)
+    
+    # Show the model section
+    model_section_match = re.search(
+        r'Model:\s*.*?\n(.*?)(?=\n\s*Starting values|\n\s*Data:|\Z)',
+        content, re.DOTALL | re.IGNORECASE
+    )
+    
+    if model_section_match:
+        model_section = model_section_match.group(1)
+        print("Model section found:")
+        print(model_section)
+        print("-" * 30)
+    
+    # Try to extract equation
+    equation = extract_model_equation(content)
+    print(f"Extracted equation: {equation}")
+    
+    if equation:
+        lambda_func = convert_equation_to_lambda(equation)
+        print(f"Lambda function: {lambda_func}")
+    
+    print("=" * 50)
+
+
 def extract_all_nist_data(raw_dir, processed_dir, models_dir):
     """
     Extract data from all .dat files in the raw directory.
@@ -232,15 +336,15 @@ def extract_all_nist_data(raw_dir, processed_dir, models_dir):
                 print(f"Warning: No data points found in {dat_file.name}")
                 continue
             
-            # Create CSV file
-            csv_filename = dat_file.stem + '.csv'
-            csv_path = Path(processed_dir) / csv_filename
+            # # Create CSV file
+            # csv_filename = dat_file.stem + '.csv'
+            # csv_path = Path(processed_dir) / csv_filename
             
-            with open(csv_path, 'w', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(['y', 'x'])  # Header
-                for y, x in data_points:
-                    writer.writerow([y, x])
+            # with open(csv_path, 'w', newline='') as csvfile:
+            #     writer = csv.writer(csvfile)
+            #     writer.writerow(['y', 'x'])  # Header
+            #     for y, x in data_points:
+            #         writer.writerow([y, x])
             
             # Add to models dictionary
             dataset_name = metadata.get('dataset_name', dat_file.stem)
@@ -258,6 +362,7 @@ def extract_all_nist_data(raw_dir, processed_dir, models_dir):
             print(f"Successfully processed {dat_file.name}")
             print(f"  - Found {len(data_points)} data points")
             print(f"  - Parameters: {metadata.get('parameters_no', 0)}")
+            print(f"  - Model function: {metadata.get('model_function', 'Not found')}")
             print(f"  - Start 1: {metadata.get('start_1', [])}")
             print(f"  - Start 2: {metadata.get('start_2', [])}")
             print(f"  - Certified: {metadata.get('certified', [])}")
@@ -266,7 +371,7 @@ def extract_all_nist_data(raw_dir, processed_dir, models_dir):
         except Exception as e:
             print(f"Error processing {dat_file.name}: {str(e)}")
             # For debugging, you can uncomment the next line
-            # debug_parse_starting_values(dat_file)
+            # debug_model_equation(dat_file)
             continue
     
     # Save models JSON file
