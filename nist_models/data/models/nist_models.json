@@ -1,152 +1,691 @@
 {
-  "Misra1a": {
-      "difficulty": "Lower",
-      "observations_no": 14,
-      "parameters_no": 2,
-      "start_1": [500, 0.0001],
-      "start_2": [250, 0.0005],
-      "certified": [238.94212918, 0.00055015643181],
-      "residual_sum_squares": 1.2455138894E-01,
-      "model_function": "lambda x, b1, b2: b1 * (1 - np.exp(-b2 * x))"
+  "Bennett5": {
+    "difficulty": "Higher",
+    "observations_no": 154,
+    "parameters_no": 3,
+    "start_1": [
+      -2000.0,
+      50.0,
+      0.8
+    ],
+    "start_2": [
+      -1500.0,
+      45.0,
+      0.85
+    ],
+    "certified": [
+      -2523.5058043,
+      46.736564644,
+      0.93218483193
+    ],
+    "residual_sum_squares": 0.00052404744073,
+    "model_function": "lambda x: magnetism)"
+  },
+  "BoxBOD": {
+    "difficulty": "Higher",
+    "observations_no": 6,
+    "parameters_no": 2,
+    "start_1": [
+      1.0,
+      1.0
+    ],
+    "start_2": [
+      100.0,
+      0.75
+    ],
+    "certified": [
+      213.80940889,
+      0.54723748542
+    ],
+    "residual_sum_squares": 1168.0088766,
+    "model_function": "lambda x: biochemical oxygen demand)"
   },
   "Chwirut1": {
-      "difficulty": "Lower",
-      "observations_no": 214,
-      "parameters_no": 3,
-      "start_1": [0.1, 0.01, 0.02],
-      "start_2": [0.15, 0.008, 0.01],
-      "certified": [0.1902781837, 0.0061314004477, 0.010530908399],
-      "residual_sum_squares": 2.3844771393E+03,
-      "model_function": "lambda x, b1, b2, b3: np.exp(-b1 * x) / (b2 + b3 * x)"
+    "difficulty": "Lower",
+    "observations_no": 214,
+    "parameters_no": 3,
+    "start_1": [
+      0.1,
+      0.01,
+      0.02
+    ],
+    "start_2": [
+      0.15,
+      0.008,
+      0.01
+    ],
+    "certified": [
+      0.1902781837,
+      0.0061314004477,
+      0.010530908399
+    ],
+    "residual_sum_squares": 2384.4771393,
+    "model_function": "lambda x: ultrasonic response)"
   },
-  "Lanczos3": {
-      "difficulty": "Lower",
-      "observations_no": 24,
-      "parameters_no": 6,
-      "start_1": [1.2, 0.3, 5.6, 5.5, 6.5, 7.6],
-      "start_2": [0.5, 0.7, 3.6, 4.2, 4.0, 6.3],
-      "certified": [0.086816414977, 0.95498101505, 0.84400777463, 2.9515951832, 1.5825685901, 4.9863565084],
-      "residual_sum_squares": 1.6117193594E-08,
-      "model_function": "lambda x, b1, b2, b3, b4, b5, b6: b1 * np.exp(-b2 * x) + b3 * np.exp(-b4 * x) + b5 * np.exp(-b6 * x)"
-  },
-  "Gauss1": {
-      "difficulty": "Lower",
-      "observations_no": 250,
-      "parameters_no": 8,
-      "start_1": [97.0, 0.009, 100.0, 65.0, 20.0, 70.0, 178.0, 16.5],
-      "start_2": [94.0, 0.0105, 99.0, 63.0, 25.0, 71.0, 180.0, 20.0],
-      "certified": [98.778210871, 0.010497276517, 100.48990633, 67.481111276, 23.12977336, 71.994503004, 178.99805021, 18.389389025],
-      "residual_sum_squares": 1.3158222432E+03,
-      "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7, b8: b1 * np.exp(-b2 * x) + b3 * np.exp(-((x - b4) ** 2) / (b5 ** 2)) + b6 * np.exp(-((x - b7) ** 2) / (b8 ** 2))"
+  "Chwirut2": {
+    "difficulty": "Lower",
+    "observations_no": 54,
+    "parameters_no": 3,
+    "start_1": [
+      0.1,
+      0.01,
+      0.02
+    ],
+    "start_2": [
+      0.15,
+      0.008,
+      0.01
+    ],
+    "certified": [
+      0.16657666537,
+      0.0051653291286,
+      0.012150007096
+    ],
+    "residual_sum_squares": 513.04802941,
+    "model_function": "lambda x: ultrasonic response)"
   },
   "DanWood": {
-      "difficulty": "Lower",
-      "observations_no": 6,
-      "parameters_no": 2,
-      "start_1": [1.0, 5.0],
-      "start_2": [0.7, 4.0],
-      "certified": [0.76886226176, 3.8604055871],
-      "residual_sum_squares": 4.3173084083E-03,
-      "model_function": "lambda x, b1, b2: b1 * (x ** b2)"
-  },
-  "Kirby2": {
-      "difficulty": "Average",
-      "observations_no": 151,
-      "parameters_no": 5,
-      "start_1": [2.0, -0.1, 0.003, -0.001, 0.00001],
-      "start_2": [1.5, -0.15, 0.0025, -0.0015, 0.00002],
-      "certified": [1.6745063063, -0.13927397867, 0.0025961181191, -0.001724181187, 0.000021664802578],
-      "residual_sum_squares": 3.9050739624,
-      "model_function": "lambda x, b1, b2, b3, b4, b5: (b1 + b2*x + b3*x**2) / (1 + b4*x + b5*x**2)"
-  },
-  "MGH17": {
-      "difficulty": "Average",
-      "observations_no": 33,
-      "parameters_no": 5,
-      "start_1": [50, 150, -100, 1, 2],
-      "start_2": [0.5, 1.5, -1, 0.01, 0.02],
-      "certified": [0.37541005211, 1.9358469127, -1.4646871366, 0.01286753464, 0.022122699662],
-      "residual_sum_squares": 5.4648946975E-05,
-      "model_function": "lambda x, b1, b2, b3, b4, b5: b1 + b2*np.exp(-x*b4) + b3*np.exp(-x*b5)"
-  },
-  "Lanczos1": {
-      "difficulty": "Average",
-      "observations_no": 24,
-      "parameters_no": 6,
-      "start_1": [1.2, 0.3, 5.6, 5.5, 6.5, 7.6],
-      "start_2": [0.5, 0.7, 3.6, 4.2, 4.0, 6.3],
-      "certified": [0.095100000027, 1.0000000001, 0.86070000013, 3.0000000002, 1.5575999998, 5.0000000001],
-      "residual_sum_squares": 1.4307867721E-25,
-      "model_function": "lambda x, b1, b2, b3, b4, b5, b6: b1*np.exp(-b2*x) + b3*np.exp(-b4*x) + b5*np.exp(-b6*x)"
-  },
-  "Misra1c": {
-      "difficulty": "Average",
-      "observations_no": 14,
-      "parameters_no": 2,
-      "start_1": [500, 0.0001],
-      "start_2": [600, 0.0002],
-      "certified": [636.42725809, 0.00020813627256],
-      "residual_sum_squares": 4.0966836971E-02,
-      "model_function": "lambda x, b1, b2: b1 * (1 - (1 + 2*b2*x)**(-0.5))"
-  },
-  "Roszman1": {
-      "difficulty": "Average",
-      "observations_no": 25,
-      "parameters_no": 4,
-      "start_1": [0.1, -0.00001, 1000, -100],
-      "start_2": [0.2, -0.000005, 1200, -150],
-      "certified": [0.20196866396, -6.1953516256E-06, 1204.4556708, -181.34269537],
-      "residual_sum_squares": 4.9484847331E-04,
-      "model_function": "lambda x, b1, b2, b3, b4: b1 - b2*x - np.arctan(b3/(x-b4))/np.pi"
-  },
-  "Thurber": {
-      "difficulty": "Higher",
-      "observations_no": 37,
-      "parameters_no": 7,
-      "start_1": [1000, 1000, 400, 40, 0.7, 0.3, 0.03],
-      "start_2": [1300, 1500, 500, 75, 1.0, 0.4, 0.05],
-      "certified": [1288.1396800, 1491.0792535, 583.23836877, 75.416644291, 0.96629502864, 0.39797285797, 0.049727297349],
-      "residual_sum_squares": 5642.7082397,
-      "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7: (b1 + b2*x + b3*x**2 + b4*x**3) / (1 + b5*x + b6*x**2 + b7*x**3)"
-  },
-  "Rat42": {
-      "difficulty": "Higher",
-      "observations_no": 9,
-      "parameters_no": 3,
-      "start_1": [100, 1.0, 0.1],
-      "start_2": [75, 2.5, 0.07],
-      "certified": [72.462237576, 2.6180768402, 0.067359200066],
-      "residual_sum_squares": 8.0565229338,
-      "model_function": "lambda x, b1, b2, b3: b1 / (1 + np.exp(b2 - b3*x))"
-  },
-  "MGH10": {
-      "difficulty": "Higher",
-      "observations_no": 16,
-      "parameters_no": 3,
-      "start_1": [2.0, 400000, 25000],
-      "start_2": [0.02, 4000, 250],
-      "certified": [0.0056096364710, 6181.3463463, 345.22363462],
-      "residual_sum_squares": 87.945855171,
-      "model_function": "lambda x, b1, b2, b3: b1 * np.exp(b2/(x + b3))"
+    "difficulty": "Lower",
+    "observations_no": 6,
+    "parameters_no": 2,
+    "start_1": [
+      1.0,
+      5.0
+    ],
+    "start_2": [
+      0.7,
+      4.0
+    ],
+    "certified": [
+      0.76886226176,
+      3.8604055871
+    ],
+    "residual_sum_squares": 0.0043173084083,
+    "model_function": "lambda x: energy)"
   },
   "Eckerle4": {
-      "difficulty": "Higher",
-      "observations_no": 35,
-      "parameters_no": 3,
-      "start_1": [1.0, 10, 500],
-      "start_2": [1.5, 5, 450],
-      "certified": [1.5543827178, 4.0888321754, 451.54121844],
-      "residual_sum_squares": 0.0014635887487,
-      "model_function": "lambda x, b1, b2, b3: (b1/b2) * np.exp(-0.5*((x-b3)/b2)**2)"
+    "difficulty": "Higher",
+    "observations_no": 35,
+    "parameters_no": 3,
+    "start_1": [
+      1.0,
+      10.0,
+      500.0
+    ],
+    "start_2": [
+      1.5,
+      5.0,
+      450.0
+    ],
+    "certified": [
+      1.5543827178,
+      4.0888321754,
+      451.54121844
+    ],
+    "residual_sum_squares": 0.0014635887487,
+    "model_function": "lambda x: transmittance)"
   },
-  "Bennett5": {
-      "difficulty": "Higher",
-      "observations_no": 154,
-      "parameters_no": 3,
-      "start_1": [-2000, 50, 0.8],
-      "start_2": [-1500, 45, 0.85],
-      "certified": [-2523.5058043, 46.736564644, 0.93218483193],
-      "residual_sum_squares": 0.00052404744073,
-      "model_function": "lambda x, b1, b2, b3: b1 * (b2 + x)**(-1/b3)"
+  "ENSO": {
+    "difficulty": "Average",
+    "observations_no": 168,
+    "parameters_no": 9,
+    "start_1": [
+      11.0,
+      3.0,
+      0.5,
+      40.0,
+      -0.7,
+      -1.3,
+      25.0,
+      -0.3,
+      1.4
+    ],
+    "start_2": [
+      10.0,
+      3.0,
+      0.5,
+      44.0,
+      -1.5,
+      0.5,
+      26.0,
+      -0.1,
+      1.5
+    ],
+    "certified": [
+      10.510749193,
+      3.0762128085,
+      0.53280138227,
+      44.3110887,
+      -1.6231428586,
+      0.52554493756,
+      26.88761444,
+      0.21232288488,
+      1.4966870418
+    ],
+    "residual_sum_squares": 788.53978668,
+    "model_function": "lambda x: atmospheric pressure)"
+  },
+  "Gauss1": {
+    "difficulty": "Lower",
+    "observations_no": 250,
+    "parameters_no": 8,
+    "start_1": [
+      97.0,
+      0.009,
+      100.0,
+      65.0,
+      20.0,
+      70.0,
+      178.0,
+      16.5
+    ],
+    "start_2": [
+      94.0,
+      0.0105,
+      99.0,
+      63.0,
+      25.0,
+      71.0,
+      180.0,
+      20.0
+    ],
+    "certified": [
+      98.778210871,
+      0.010497276517,
+      100.48990633,
+      67.481111276,
+      23.12977336,
+      71.994503004,
+      178.99805021,
+      18.389389025
+    ],
+    "residual_sum_squares": 1315.8222432,
+    "model_function": "lambda x, b1, b2, b3, b4, b5: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 )"
+  },
+  "Gauss2": {
+    "difficulty": "Lower",
+    "observations_no": 250,
+    "parameters_no": 8,
+    "start_1": [
+      96.0,
+      0.009,
+      103.0,
+      106.0,
+      18.0,
+      72.0,
+      151.0,
+      18.0
+    ],
+    "start_2": [
+      98.0,
+      0.0105,
+      103.0,
+      105.0,
+      20.0,
+      73.0,
+      150.0,
+      20.0
+    ],
+    "certified": [
+      99.018328406,
+      0.010994945399,
+      101.88022528,
+      107.03095519,
+      23.578584029,
+      72.045589471,
+      153.27010194,
+      19.525972636
+    ],
+    "residual_sum_squares": 1247.5282092,
+    "model_function": "lambda x, b1, b2, b3, b4, b5: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 )"
+  },
+  "Gauss3": {
+    "difficulty": "Average",
+    "observations_no": 250,
+    "parameters_no": 8,
+    "start_1": [
+      94.9,
+      0.009,
+      90.1,
+      113.0,
+      20.0,
+      73.8,
+      140.0,
+      20.0
+    ],
+    "start_2": [
+      96.0,
+      0.0096,
+      80.0,
+      110.0,
+      25.0,
+      74.0,
+      139.0,
+      25.0
+    ],
+    "certified": [
+      98.94036897,
+      0.010945879335,
+      100.69553078,
+      111.63619459,
+      23.300500029,
+      73.705031418,
+      147.76164251,
+      19.66822123
+    ],
+    "residual_sum_squares": 1244.484636,
+    "model_function": "lambda x, b1, b2, b3, b4, b5: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 )"
+  },
+  "Hahn1": {
+    "difficulty": "Average",
+    "observations_no": 236,
+    "parameters_no": 7,
+    "start_1": [
+      10.0,
+      -1.0,
+      0.05,
+      -1e-05,
+      -0.05,
+      0.001,
+      -1e-06
+    ],
+    "start_2": [
+      1.0,
+      -0.1,
+      0.005,
+      -1e-06,
+      -0.005,
+      0.0001,
+      -1e-07
+    ],
+    "certified": [
+      1.0776351733,
+      -0.12269296921,
+      0.004086375061,
+      -1.4262662514e-06,
+      -0.0057609940901,
+      0.00024053735503,
+      -1.2314450199e-07
+    ],
+    "residual_sum_squares": 1.5324382854,
+    "model_function": "lambda x: coefficient of thermal expansion)"
+  },
+  "Kirby2": {
+    "difficulty": "Average",
+    "observations_no": 151,
+    "parameters_no": 5,
+    "start_1": [
+      2.0,
+      -0.1,
+      0.003,
+      -0.001,
+      1e-05
+    ],
+    "start_2": [
+      1.5,
+      -0.15,
+      0.0025,
+      -0.0015,
+      2e-05
+    ],
+    "certified": [
+      1.6745063063,
+      -0.13927397867,
+      0.0025961181191,
+      -0.001724181187,
+      2.1664802578e-05
+    ],
+    "residual_sum_squares": 3.9050739624,
+    "model_function": "lambda x, b1, b2, b3: (b1 + b2*x + b3*x**2) /"
+  },
+  "Lanczos1": {
+    "difficulty": "Average",
+    "observations_no": 24,
+    "parameters_no": 6,
+    "start_1": [
+      1.2,
+      0.3,
+      5.6,
+      5.5,
+      6.5,
+      7.6
+    ],
+    "start_2": [
+      0.5,
+      0.7,
+      3.6,
+      4.2,
+      4.0,
+      6.3
+    ],
+    "certified": [
+      0.095100000027,
+      1.0000000001,
+      0.86070000013,
+      3.0000000002,
+      1.5575999998,
+      5.0000000001
+    ],
+    "residual_sum_squares": 1.4307867721e-25,
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6: b1*np.exp(-b2*x) + b3*np.exp(-b4*x) + b5*np.exp(-b6*x)"
+  },
+  "Lanczos2": {
+    "difficulty": "Average",
+    "observations_no": 24,
+    "parameters_no": 6,
+    "start_1": [
+      1.2,
+      0.3,
+      5.6,
+      5.5,
+      6.5,
+      7.6
+    ],
+    "start_2": [
+      0.5,
+      0.7,
+      3.6,
+      4.2,
+      4.0,
+      6.3
+    ],
+    "certified": [
+      0.096251029939,
+      1.0057332849,
+      0.86424689056,
+      3.0078283915,
+      1.5529016879,
+      5.00287981
+    ],
+    "residual_sum_squares": 2.2299428125e-11,
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6: b1*np.exp(-b2*x) + b3*np.exp(-b4*x) + b5*np.exp(-b6*x)"
+  },
+  "Lanczos3": {
+    "difficulty": "Lower",
+    "observations_no": 24,
+    "parameters_no": 6,
+    "start_1": [
+      1.2,
+      0.3,
+      5.6,
+      5.5,
+      6.5,
+      7.6
+    ],
+    "start_2": [
+      0.5,
+      0.7,
+      3.6,
+      4.2,
+      4.0,
+      6.3
+    ],
+    "certified": [
+      0.086816414977,
+      0.95498101505,
+      0.84400777463,
+      2.9515951832,
+      1.5825685901,
+      4.9863565084
+    ],
+    "residual_sum_squares": 1.6117193594e-08,
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6: b1*np.exp(-b2*x) + b3*np.exp(-b4*x) + b5*np.exp(-b6*x)"
+  },
+  "MGH09": {
+    "difficulty": "Higher",
+    "observations_no": 11,
+    "parameters_no": 4,
+    "start_1": [
+      25.0,
+      39.0,
+      41.5,
+      39.0
+    ],
+    "start_2": [
+      0.25,
+      0.39,
+      0.415,
+      0.39
+    ],
+    "certified": [
+      0.19280693458,
+      0.19128232873,
+      0.12305650693,
+      0.13606233068
+    ],
+    "residual_sum_squares": 0.00030750560385,
+    "model_function": "lambda x, b1, b2, b3, b4: b1*(x**2+x*b2) / (x**2+x*b3+b4)"
+  },
+  "MGH10": {
+    "difficulty": "Higher",
+    "observations_no": 16,
+    "parameters_no": 3,
+    "start_1": [
+      2.0,
+      400000.0,
+      25000.0
+    ],
+    "start_2": [
+      0.02,
+      4000.0,
+      250.0
+    ],
+    "certified": [
+      0.005609636471,
+      6181.3463463,
+      345.22363462
+    ],
+    "residual_sum_squares": 87.945855171,
+    "model_function": "lambda x, b1, b2, b3: b1 * np.exp(b2/(x+b3))"
+  },
+  "MGH17": {
+    "difficulty": "Average",
+    "observations_no": 33,
+    "parameters_no": 5,
+    "start_1": [
+      50.0,
+      150.0,
+      -100.0,
+      1.0,
+      2.0
+    ],
+    "start_2": [
+      0.5,
+      1.5,
+      -1.0,
+      0.01,
+      0.02
+    ],
+    "certified": [
+      0.37541005211,
+      1.9358469127,
+      -1.4646871366,
+      0.01286753464,
+      0.022122699662
+    ],
+    "residual_sum_squares": 5.4648946975e-05,
+    "model_function": "lambda x, b1, b2, b3, b4, b5: b1 + b2*np.exp(-x*b4) + b3*np.exp(-x*b5)"
+  },
+  "Misra1a": {
+    "difficulty": "Lower",
+    "observations_no": 14,
+    "parameters_no": 2,
+    "start_1": [
+      500.0,
+      0.0001
+    ],
+    "start_2": [
+      250.0,
+      0.0005
+    ],
+    "certified": [
+      238.94212918,
+      0.00055015643181
+    ],
+    "residual_sum_squares": 0.12455138894,
+    "model_function": "lambda x: volume)"
+  },
+  "Misra1b": {
+    "difficulty": "Lower",
+    "observations_no": 14,
+    "parameters_no": 2,
+    "start_1": [
+      500.0,
+      0.0001
+    ],
+    "start_2": [
+      300.0,
+      0.0002
+    ],
+    "certified": [
+      337.99746163,
+      0.00039039091287
+    ],
+    "residual_sum_squares": 0.075464681533,
+    "model_function": "lambda x: volume)"
+  },
+  "Misra1c": {
+    "difficulty": "Average",
+    "observations_no": 14,
+    "parameters_no": 2,
+    "start_1": [
+      500.0,
+      0.0001
+    ],
+    "start_2": [
+      600.0,
+      0.0002
+    ],
+    "certified": [
+      636.42725809,
+      0.00020813627256
+    ],
+    "residual_sum_squares": 0.040966836971,
+    "model_function": "lambda x: volume)"
+  },
+  "Misra1d": {
+    "difficulty": "Average",
+    "observations_no": 14,
+    "parameters_no": 2,
+    "start_1": [
+      500.0,
+      0.0001
+    ],
+    "start_2": [
+      450.0,
+      0.0003
+    ],
+    "certified": [
+      437.36970754,
+      0.00030227324449
+    ],
+    "residual_sum_squares": 0.056419295283,
+    "model_function": "lambda x: volume)"
+  },
+  "Rat42": {
+    "difficulty": "Higher",
+    "observations_no": 9,
+    "parameters_no": 3,
+    "start_1": [
+      100.0,
+      1.0,
+      0.1
+    ],
+    "start_2": [
+      75.0,
+      2.5,
+      0.07
+    ],
+    "certified": [
+      72.462237576,
+      2.6180768402,
+      0.067359200066
+    ],
+    "residual_sum_squares": 8.0565229338,
+    "model_function": "lambda x: pasture yield)"
+  },
+  "Rat43": {
+    "difficulty": "Higher",
+    "observations_no": 15,
+    "parameters_no": 4,
+    "start_1": [
+      100.0,
+      10.0,
+      1.0,
+      1.0
+    ],
+    "start_2": [
+      700.0,
+      5.0,
+      0.75,
+      1.3
+    ],
+    "certified": [
+      699.6415127,
+      5.2771253025,
+      0.75962938329,
+      1.2792483859
+    ],
+    "residual_sum_squares": 8786.404908,
+    "model_function": "lambda x: onion bulb dry weight)"
+  },
+  "Roszman1": {
+    "difficulty": "Average",
+    "observations_no": 25,
+    "parameters_no": 4,
+    "start_1": [
+      0.1,
+      -1e-05,
+      1000.0,
+      -100.0
+    ],
+    "start_2": [
+      0.2,
+      -5e-06,
+      1200.0,
+      -150.0
+    ],
+    "certified": [
+      0.20196866396,
+      -6.1953516256e-06,
+      1204.4556708,
+      -181.34269537
+    ],
+    "residual_sum_squares": 0.00049484847331,
+    "model_function": "lambda x: quantum defect)"
+  },
+  "Thurber": {
+    "difficulty": "Higher",
+    "observations_no": 37,
+    "parameters_no": 7,
+    "start_1": [
+      1000.0,
+      1000.0,
+      400.0,
+      40.0,
+      0.7,
+      0.3,
+      0.03
+    ],
+    "start_2": [
+      1300.0,
+      1500.0,
+      500.0,
+      75.0,
+      1.0,
+      0.4,
+      0.05
+    ],
+    "certified": [
+      1288.13968,
+      1491.0792535,
+      583.23836877,
+      75.416644291,
+      0.96629502864,
+      0.39797285797,
+      0.049727297349
+    ],
+    "residual_sum_squares": 5642.7082397,
+    "model_function": "lambda x: electron mobility)"
   }
 }
