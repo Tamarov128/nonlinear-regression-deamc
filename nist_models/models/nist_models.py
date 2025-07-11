@@ -25,7 +25,7 @@ class NISTModel:
   @classmethod
   def _load_models_data(cls):
     if cls._models_data is None:
-      json_path = Path(__file__).parent / "data" / "models" / "nist_models.json"
+      json_path = Path(__file__).parent.parent / "data" / "models" / "nist_models.json"
       with open(json_path) as f:
         cls._models_data = json.load(f)
 
@@ -69,7 +69,7 @@ class NISTModel:
   
   def data(self) -> pd.DataFrame:
     """Loads the dataset from CSV"""
-    csv_path = Path(__file__).parent / "data" / "processed" / f"{self.name}.csv"
+    csv_path = Path(__file__).parent.parent / "data" / "processed" / f"{self.name}.csv"
     if not csv_path.exists():
       raise FileNotFoundError(f"Data file not found: {csv_path}")
     return pd.read_csv(csv_path)
