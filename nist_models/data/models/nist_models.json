@@ -163,7 +163,7 @@
       1.4966870418
     ],
     "residual_sum_squares": 788.53978668,
-    "model_function": "lambda x, b1, b2, b3: b1 + b2*np.cos( 2*np.pi*x/12 ) + b3*np.sin( 2*np.pi*x/12 )"
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7, b8, b9: b1 + b2*np.cos( 2*np.pi*x/12 ) + b3*np.sin( 2*np.pi*x/12 ) + b5*np.cos( 2*np.pi*x/b4 ) + b6*np.sin( 2*np.pi*x/b4 ) + b8*np.cos( 2*np.pi*x/b7 ) + b9*np.sin( 2*np.pi*x/b7 )"
   },
   "Gauss1": {
     "difficulty": "Lower",
@@ -200,7 +200,7 @@
       18.389389025
     ],
     "residual_sum_squares": 1315.8222432,
-    "model_function": "lambda x, b1, b2, b3, b4, b5: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 )"
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7, b8: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 ) + b6*np.exp( -(x-b7)**2 / b8**2 )"
   },
   "Gauss2": {
     "difficulty": "Lower",
@@ -237,7 +237,7 @@
       19.525972636
     ],
     "residual_sum_squares": 1247.5282092,
-    "model_function": "lambda x, b1, b2, b3, b4, b5: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 )"
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7, b8: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 ) + b6*np.exp( -(x-b7)**2 / b8**2 )"
   },
   "Gauss3": {
     "difficulty": "Average",
@@ -274,7 +274,7 @@
       19.66822123
     ],
     "residual_sum_squares": 1244.484636,
-    "model_function": "lambda x, b1, b2, b3, b4, b5: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 )"
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7, b8: b1*np.exp( -b2*x ) + b3*np.exp( -(x-b4)**2 / b5**2 ) + b6*np.exp( -(x-b7)**2 / b8**2 )"
   },
   "Hahn1": {
     "difficulty": "Average",
@@ -308,7 +308,7 @@
       -1.2314450199e-07
     ],
     "residual_sum_squares": 1.5324382854,
-    "model_function": "lambda x, b1, b2, b3, b4: (b1+b2*x+b3*x**2+b4*x**3) /"
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7: (b1+b2*x+b3*x**2+b4*x**3) / (1+b5*x+b6*x**2+b7*x**3)"
   },
   "Kirby2": {
     "difficulty": "Average",
@@ -336,7 +336,7 @@
       2.1664802578e-05
     ],
     "residual_sum_squares": 3.9050739624,
-    "model_function": "lambda x, b1, b2, b3: (b1 + b2*x + b3*x**2) /"
+    "model_function": "lambda x, b1, b2, b3, b4, b5: (b1 + b2*x + b3*x**2) / (1 + b4*x + b5*x**2)"
   },
   "Lanczos1": {
     "difficulty": "Average",
@@ -652,7 +652,7 @@
       -181.34269537
     ],
     "residual_sum_squares": 0.00049484847331,
-    "model_function": "lambda x, b1, b2, b3, b4: b1 - b2*x - np.np.arctan(b3/(x-b4))/np.pi"
+    "model_function": "lambda x, b1, b2, b3, b4: b1 - b2*x - np.arctan(b3/(x-b4))/np.pi"
   },
   "Thurber": {
     "difficulty": "Higher",
@@ -686,6 +686,6 @@
       0.049727297349
     ],
     "residual_sum_squares": 5642.7082397,
-    "model_function": "lambda x, b1, b2, b3, b4: (b1 + b2*x + b3*x**2 + b4*x**3) /"
+    "model_function": "lambda x, b1, b2, b3, b4, b5, b6, b7: (b1 + b2*x + b3*x**2 + b4*x**3) / (1 + b5*x + b6*x**2 + b7*x**3)"
   }
 }

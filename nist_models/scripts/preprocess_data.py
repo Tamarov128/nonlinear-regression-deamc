@@ -140,7 +140,7 @@ def parse_nist_dat_file(file_path):
 def extract_model_equation(content):
     """
     Extract the model equation from the NIST file content.
-    Looks specifically in the Model section for the equation.
+    Handles both single-line and multi-line equations.
     
     Args:
         content (str): File content
@@ -148,51 +148,80 @@ def extract_model_equation(content):
     Returns:
         str: Model equation or None if not found
     """
-    # Strategy 1: Look for equation in the Model section
-    # Find the model section first
+    # Find the model section - everything between "Model:" and "Starting values"
     model_section_match = re.search(
-        r'Model:\s*.*?\n(.*?)(?=\n\s*Starting values|\n\s*Data:|\Z)',
+        r'Model:\s*.*?\n(.*?)(?=Starting values)',
         content, re.DOTALL | re.IGNORECASE
     )
     
-    if model_section_match:
-        model_section = model_section_match.group(1)
-        
-        # Look for equation patterns in the model section
-        # Pattern 1: y = ... + e (multiline)
-        eq_match = re.search(r'y\s*=\s*(.+?)(?:\s*\+\s*e\s*$|\s*$)', model_section, re.DOTALL | re.MULTILINE)
-        if eq_match:
-            equation = eq_match.group(1).strip()
-            # Clean up the equation - remove extra whitespace and newlines
-            equation = re.sub(r'\s+', ' ', equation)
-            equation = re.sub(r'\n+', ' ', equation)
-            return equation.strip()
+    if not model_section_match:
+        return None
     
-    # Strategy 2: Look for standalone equation lines that contain mathematical expressions
-    lines = content.split('\n')
-    for i, line in enumerate(lines):
+    model_section = model_section_match.group(1).strip()
+    
+    # Split into lines and look for equation
+    lines = model_section.split('\n')
+    
+    # Find the line that starts with "y =" or contains "y ="
+    equation_lines = []
+    found_equation_start = False
+    
+    for line in lines:
         line = line.strip()
-        # Look for lines that start with y = and contain mathematical operators
-        if (line.startswith('y =') or line.startswith('y=')) and any(op in line for op in ['*', '+', '-', '/', '(', ')']):
-            # Check if this is a simple variable assignment like "y = magnetism"
-            if not re.search(r'y\s*=\s*\w+\s*\)', line):  # Skip "y = magnetism)" type lines
-                equation = line
-                # If the equation continues on the next lines, collect them
-                j = i + 1
-                while j < len(lines) and (lines[j].strip().startswith('+') or 
-                                         lines[j].strip().startswith('-') or
-                                         'exp(' in lines[j] or
-                                         lines[j].strip().endswith('+ e')):
-                    equation += ' ' + lines[j].strip()
-                    j += 1
-                
-                # Remove the "y =" part
-                equation = re.sub(r'^\s*y\s*=\s*', '', equation)
-                # Remove trailing "+ e"
-                equation = re.sub(r'\s*\+\s*e\s*$', '', equation)
-                return equation.strip()
+        
+        # Skip empty lines and lines with just whitespace
+        if not line:
+            continue
+            
+        # Skip lines that are clearly not equations (like parameter counts)
+        if re.match(r'^\d+\s+Parameters', line):
+            continue
+        if 'Class' in line:
+            continue
+        if line.startswith('(') and line.endswith(')'):
+            continue
+            
+        # Look for the start of the equation
+        if (line.startswith('y =') or line.startswith('y=')) and not found_equation_start:
+            found_equation_start = True
+            equation_lines.append(line)
+            continue
+        
+        # If we found the start, continue collecting lines that are part of the equation
+        if found_equation_start:
+            # Check if this line is part of the equation
+            # Lines that start with operators, contain mathematical expressions, or end with + e
+            if (line.startswith('+') or line.startswith('-') or 
+                line.startswith('*') or line.startswith('/') or
+                'exp(' in line or 'cos(' in line or 'sin(' in line or
+                'arctan(' in line or 'log(' in line or
+                line.endswith('+ e') or line.endswith('+e') or
+                '**' in line or '*' in line or 
+                ('(' in line and ')' in line and ('b' in line or 'x' in line))):
+                equation_lines.append(line)
+            else:
+                # This line doesn't seem to be part of the equation, stop collecting
+                break
     
-    return None
+    if not equation_lines:
+        return None
+    
+    # Join all equation lines and clean up
+    equation = ' '.join(equation_lines)
+    
+    # Remove "y =" from the beginning
+    equation = re.sub(r'^\s*y\s*=\s*', '', equation)
+    
+    # Remove trailing "+ e" or "+e"
+    equation = re.sub(r'\s*\+\s*e\s*$', '', equation)
+    
+    # Clean up extra whitespace
+    equation = re.sub(r'\s+', ' ', equation)
+    
+    # Remove any remaining trailing operators
+    equation = re.sub(r'\s*[+\-]\s*$', '', equation)
+    
+    return equation.strip() if equation.strip() else None
 
 
 def convert_equation_to_lambda(equation):
@@ -208,14 +237,8 @@ def convert_equation_to_lambda(equation):
     if not equation:
         return ""
     
-    # Remove common prefixes and suffixes
+    # Clean up the equation
     eq = equation.strip()
-    eq = re.sub(r'^\s*y\s*=\s*', '', eq)  # Remove y =
-    eq = re.sub(r'\s*\+\s*e\s*$', '', eq)  # Remove + e at end
-    eq = re.sub(r'\s*\+\s*$', '', eq)     # Remove trailing +
-    
-    # Clean up whitespace
-    eq = re.sub(r'\s+', ' ', eq)
     
     # Fix common mathematical notations
     eq = eq.replace('exp(', 'np.exp(')
@@ -230,12 +253,7 @@ def convert_equation_to_lambda(equation):
     eq = eq.replace('pi', 'np.pi')
     
     # Handle power operations
-    # Convert **(-1/b3) to **(-1/b3) - already correct
-    # Convert (expression)**(-1/b3) to (expression)**(-1/b3) - already correct
     eq = re.sub(r'\*\*\s*\(-1/(\w+)\)', r'**(-1/\1)', eq)
-    
-    # Handle fractions in exponents like (-1/b3)
-    # No change needed - already handled correctly
     
     # Determine parameters based on content
     param_nums = re.findall(r'b(\d+)', eq)
@@ -286,19 +304,27 @@ def debug_model_equation(file_path):
     
     # Show the model section
     model_section_match = re.search(
-        r'Model:\s*.*?\n(.*?)(?=\n\s*Starting values|\n\s*Data:|\Z)',
+        r'Model:\s*.*?\n(.*?)(?=Starting values)',
         content, re.DOTALL | re.IGNORECASE
     )
     
     if model_section_match:
         model_section = model_section_match.group(1)
         print("Model section found:")
+        print(repr(model_section))
+        print("Model section content:")
         print(model_section)
+        print("-" * 30)
+        
+        # Show line by line analysis
+        lines = model_section.split('\n')
+        for i, line in enumerate(lines):
+            print(f"Line {i}: '{line.strip()}'")
         print("-" * 30)
     
     # Try to extract equation
     equation = extract_model_equation(content)
-    print(f"Extracted equation: {equation}")
+    print(f"Extracted equation: '{equation}'")
     
     if equation:
         lambda_func = convert_equation_to_lambda(equation)
@@ -336,15 +362,15 @@ def extract_all_nist_data(raw_dir, processed_dir, models_dir):
                 print(f"Warning: No data points found in {dat_file.name}")
                 continue
             
-            # # Create CSV file
-            # csv_filename = dat_file.stem + '.csv'
-            # csv_path = Path(processed_dir) / csv_filename
+            # Create CSV file
+            csv_filename = dat_file.stem + '.csv'
+            csv_path = Path(processed_dir) / csv_filename
             
-            # with open(csv_path, 'w', newline='') as csvfile:
-            #     writer = csv.writer(csvfile)
-            #     writer.writerow(['y', 'x'])  # Header
-            #     for y, x in data_points:
-            #         writer.writerow([y, x])
+            with open(csv_path, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(['y', 'x'])  # Header
+                for y, x in data_points:
+                    writer.writerow([y, x])
             
             # Add to models dictionary
             dataset_name = metadata.get('dataset_name', dat_file.stem)
